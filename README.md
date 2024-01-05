@@ -1,3 +1,3 @@
-# nvim-config
+# nvim
 
 ## Hello world, this is my config.
