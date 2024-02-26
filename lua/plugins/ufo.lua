@@ -1,21 +1,16 @@
---vim.o.foldcolumn = '1' -- '0' is not bad
---vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
---vim.o.foldlevelstart = 99
---vim.o.foldenable = true
-
--- Using ufo provider need remap `zR` and `zM`. If Neovim is 0.6.1, remap yourself
---vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
---vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
-
---require('ufo').setup({
- --   provider_selector = function(bufnr, filetype, buftype)
---        return { 'treesitter', 'indent' }
---    end
---})
-    -- [TEXT FOLD]
---    use { 'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async' }
-
 return {
-    'kevinhwang91/nvim-ufo',
-    event = {'BufReadPre', 'BufNewFile'},
+  'kevinhwang91/nvim-ufo',
+  dependencies = 'kevinhwang91/promise-async',
+  event = { 'BufReadPost', 'BufNewFile' },
+  keys = {
+    -- stylua: ignore start
+    { 'zR', function() return require('ufo').openAllFolds() end,  desc = 'Open all folds' },
+    { 'zM', function() return require('ufo').closeAllFolds() end, desc = 'Close all folds' },
+    -- stylua: ignore end
+  },
+  opts = {
+    provider_selector = function(_, filetype, buftype)
+      return (filetype == '' or buftype == 'nofile') and 'indent' or { 'treesitter', 'indent' }
+    end,
+  },
 }
